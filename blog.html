@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MinuInvesteeringud | Blogi</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="container nav-content">
+            <a href="index.html" class="logo">MinuInvesteeringud</a>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Avaleht</a></li>
+                    <li><a href="blog.html" class="active">Blogi</a></li>
+                    <li><a href="kalkulaator.html">Kalkulaator</a></li>
+                    <li><a href="login.html" class="btn-login">Admin</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="container">
+        <h1 class="section-title">Kõik Artiklid</h1>
+        <div class="blog-grid" id="all-posts">
+            <!-- Kõik postitused laetakse siia -->
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 MinuInvesteeringud. Kõik õigused kaitstud.</p>
+        </div>
+    </footer>
+
+    <script>
+        function loadAllPosts() {
+            const posts = JSON.parse(localStorage.getItem('my_blog_posts')) || [];
+            const container = document.getElementById('all-posts');
+            container.innerHTML = '';
+
+            posts.forEach(post => {
+                container.innerHTML += `
+                    <div class="blog-card">
+                        <img src="${post.image}" alt="${post.title}">
+                        <div class="blog-card-body">
+                            <span class="blog-badge">${post.category}</span>
+                            <h3>${post.title}</h3>
+                            <p>${post.summary}</p>
+                            <div class="blog-card-footer">
+                                <span>${post.date}</span>
+                                <a href="postitus.html?id=${post.id}" class="read-more">Loe edasi &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+        loadAllPosts();
+    </script>
+</body>
+</html>
