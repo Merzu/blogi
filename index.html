@@ -3,314 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sinu Investeerimisblogi</title>
-    <style>
-        /* CSS KUJUNDUS */
-        :root {
-            --primary-color: #2c3e50;
-            --accent-color: #27ae60;
-            --bg-color: #f4f7f6;
-            --text-color: #333;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-        }
-
-        header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: auto;
-            overflow: hidden;
-        }
-
-        .nav-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--accent-color);
-            text-decoration: none;
-        }
-
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 20px;
-            padding: 0;
-            margin: 0;
-        }
-
-        nav a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.3s;
-        }
-
-        nav a:hover {
-            color: var(--accent-color);
-        }
-
-        /* Hero sektsioon */
-        .hero {
-            background: linear-gradient(rgba(44, 62, 80, 0.8), rgba(44, 62, 80, 0.8)), url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') center/cover;
-            color: white;
-            text-align: center;
-            padding: 100px 20px;
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 10px;
-        }
-
-        .btn {
-            display: inline-block;
-            background: var(--accent-color);
-            color: white;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            margin-top: 20px;
-            border: none;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .btn:hover {
-            background: #219150;
-        }
-
-        /* Sektsioonide üldised seaded */
-        section {
-            padding: 60px 0;
-        }
-
-        h2 {
-            text-align: center;
-            color: var(--primary-color);
-            margin-bottom: 40px;
-            font-size: 2.2rem;
-        }
-
-        /* Blogi kaardid */
-        .blog-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .blog-card {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            padding: 20px;
-            transition: transform 0.3s;
-        }
-
-        .blog-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .blog-date {
-            color: #777;
-            font-size: 0.9rem;
-        }
-
-        /* Kalkulaator */
-        .calculator-box {
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-
-        #calc-result {
-            margin-top: 20px;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--accent-color);
-            text-align: center;
-        }
-
-        /* Uudiskiri */
-        .newsletter {
-            background-color: var(--primary-color);
-            color: white;
-            text-align: center;
-        }
-
-        .newsletter h2 {
-            color: white;
-        }
-
-        .newsletter-form {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        .newsletter-form input {
-            padding: 10px;
-            width: 70%;
-            border: none;
-            border-radius: 4px;
-        }
-
-        /* Jalus */
-        footer {
-            background-color: #1a252f;
-            color: white;
-            text-align: center;
-            padding: 20px 0;
-            font-size: 0.9rem;
-        }
-
-        /* Mobiilne vaade */
-        @media(max-width: 768px) {
-            .nav-content {
-                flex-direction: column;
-            }
-            nav ul {
-                margin-top: 15px;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            .newsletter-form {
-                flex-direction: column;
-            }
-            .newsletter-form input {
-                width: 100%;
-            }
-        }
-    </style>
+    <title>MinuInvesteeringud | Avaleht</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <header>
+    <header class="main-header">
         <div class="container nav-content">
-            <a href="#" class="logo">MinuInvesteeringud</a>
+            <a href="index.html" class="logo">MinuInvesteeringud</a>
             <nav>
                 <ul>
-                    <li><a href="#avaleht">Avaleht</a></li>
-                    <li><a href="#blogi">Blogi</a></li>
-                    <li><a href="#kalkulaator">Kalkulaatorid</a></li>
-                    <li><a href="#portfell">Minu Portfell</a></li>
+                    <li><a href="index.html" class="active">Avaleht</a></li>
+                    <li><a href="blog.html">Blogi</a></li>
+                    <li><a href="kalkulaator.html">Kalkulaator</a></li>
+                    <li><a href="login.html" class="btn-login">Admin</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
-    <section id="avaleht" class="hero">
+    <section class="hero">
         <div class="container">
             <h1>Teekond Finantsvabaduseni</h1>
-            <p>Ausalt ja avatult rahast, säästmisest ning investeerimisest Eestis. Jälgi minu teekonda ja õpi minu vigadest!</p>
-            <a href="#blogi" class="btn">Loe viimaseid postitusi</a>
+            <p>Ausalt ja läbipaistvalt raha kasvatamisest, säästmisest ning investeerimisest Eestis.</p>
+            <a href="blog.html" class="btn">Loe blogi</a>
         </div>
     </section>
 
-    <section id="blogi" class="container">
-        <h2>Viimased Mõtted</h2>
-        <div class="blog-grid">
-            <div class="blog-card">
-                <span class="blog-date">31. August 2026</span>
-                <h3>Miks ma alustasin investeerimisega?</h3>
-                <p>Esimene postitus sellest, mis mind üldse motiveeris oma rahaasju korda tegema ja kuidas esimene aktsiaost välja nägi...</p>
-                <a href="#" style="color: var(--accent-color); text-decoration: none; font-weight: bold;">Loe edasi &rarr;</a>
-            </div>
-            <div class="blog-card">
-                <span class="blog-date">15. August 2026</span>
-                <h3>Kuidas ma kogun meelerahufondi?</h3>
-                <p>Enne investeerimist on oluline omada tagavara. Selles postituses räägin, kuidas ma 3 kuu kulude jagu raha kõrvale panen.</p>
-                <a href="#" style="color: var(--accent-color); text-decoration: none; font-weight: bold;">Loe edasi &rarr;</a>
-            </div>
-            <div class="blog-card">
-                <span class="blog-date">1. August 2026</span>
-                <h3>Indeksfondid vs Üksikaktsiad</h3>
-                <p>Kas valida turvaline indeks või proovida leida järgmine LHV? Minu mõtted riskidest ja tootlusest.</p>
-                <a href="#" style="color: var(--accent-color); text-decoration: none; font-weight: bold;">Loe edasi &rarr;</a>
-            </div>
+    <section class="container">
+        <h2 class="section-title">Värsked Postitused</h2>
+        <div class="blog-grid" id="featured-posts">
+            <!-- Dünaamilised postitused ilmuvad siia -->
         </div>
     </section>
 
-    <section id="kalkulaator" style="background-color: #e9ecef;">
-        <div class="container">
-            <h2>Liitintressi Kalkulaator</h2>
-            <p style="text-align: center; margin-bottom: 30px;">Arvuta välja, millal sinust saab miljonär (või vähemalt rikas)! Albert Einstein nimetas liitintressi maailma kaheksandaks imeks.</p>
-            
-            <div class="calculator-box">
-                <div class="form-group">
-                    <label for="algsumma">Algsumma (€):</label>
-                    <input type="number" id="algsumma" value="1000" min="0">
-                </div>
-                <div class="form-group">
-                    <label for="igakuine">Igakuine lisapanus (€):</label>
-                    <input type="number" id="igakuine" value="150" min="0">
-                </div>
-                <div class="form-group">
-                    <label for="tootlus">Eeldatav aastane tootlus (%):</label>
-                    <input type="number" id="tootlus" value="8" min="0">
-                </div>
-                <div class="form-group">
-                    <label for="aastad">Aastate arv:</label>
-                    <input type="number" id="aastad" value="20" min="1">
-                </div>
-                <button class="btn" style="width: 100%;" onclick="arvutaLiitintress()">Arvuta Lõppsumma</button>
-                
-                <div id="calc-result">Portfelli väärtus: 0 €</div>
-            </div>
-        </div>
-    </section>
-
-    <section id="liitu" class="newsletter">
-        <div class="container">
-            <h2>Ära maga maha uusi postitusi!</h2>
-            <p>Liitu uudiskirjaga ja saad teavituse, kui lisan uue blogipostituse või portfelli ülevaate.</p>
-            <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Aitäh! Sinu e-mail on kirja pandud (päriselt ühendamiseks on vaja lisada meiliteenus, nt Mailchimp).');">
+    <section class="container">
+        <div class="newsletter-box">
+            <h2>Püsi Finantskursil!</h2>
+            <p>Liitu uudiskirjaga ja saa teavitus iga kord, kui avaldan uue postituse või portfelli ülevaate.</p>
+            <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Aitäh liitumast!');">
                 <input type="email" placeholder="Sinu e-posti aadress" required>
-                <button type="submit" class="btn" style="margin-top: 0;">Liitu</button>
+                <button type="submit" class="btn">Liitu</button>
             </form>
         </div>
     </section>
@@ -318,34 +51,44 @@
     <footer>
         <div class="container">
             <p>&copy; 2026 MinuInvesteeringud. Kõik õigused kaitstud.</p>
-            <p style="font-size: 0.8rem; color: #aaa;">Hoiatus: See blogi kajastab autori isiklikke kogemusi ega ole käsitletav finantsnõuna. Investeerimisega kaasnevad riskid.</p>
         </div>
     </footer>
 
     <script>
-        function arvutaLiitintress() {
-            // Võtame kasutaja sisestatud väärtused
-            const algsumma = parseFloat(document.getElementById('algsumma').value) || 0;
-            const igakuine = parseFloat(document.getElementById('igakuine').value) || 0;
-            const tootlus = parseFloat(document.getElementById('tootlus').value) || 0;
-            const aastad = parseInt(document.getElementById('aastad').value) || 0;
+        // Lae postitused brauseri mälust
+        function loadPosts() {
+            const posts = JSON.parse(localStorage.getItem('my_blog_posts')) || getInitialPosts();
+            const container = document.getElementById('featured-posts');
+            container.innerHTML = '';
 
-            let kogusumma = algsumma;
-            const kuuTootlus = (tootlus / 100) / 12;
-            const kuudeArv = aastad * 12;
-
-            // Arvutame igakuise kasvu ja lisapanuse
-            for (let i = 0; i < kuudeArv; i++) {
-                kogusumma = kogusumma * (1 + kuuTootlus) + igakuine;
-            }
-
-            // Kuvame tulemuse ekraanil ilusasti vormindatult
-            const tulemus = kogusumma.toLocaleString('et-EE', { maximumFractionDigits: 0 });
-            document.getElementById('calc-result').innerHTML = `Lõppsumma: ${tulemus} &euro;`;
+            posts.slice(0, 3).forEach(post => {
+                container.innerHTML += `
+                    <div class="blog-card">
+                        <img src="${post.image}" alt="${post.title}">
+                        <div class="blog-card-body">
+                            <span class="blog-badge">${post.category}</span>
+                            <h3>${post.title}</h3>
+                            <p>${post.summary}</p>
+                            <div class="blog-card-footer">
+                                <span>${post.date}</span>
+                                <a href="postitus.html?id=${post.id}" class="read-more">Loe edasi &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
         }
 
-        // Käivitame kalkulaatori korra kohe alguses, et näidata näidisväärtust
-        arvutaLiitintress();
+        function getInitialPosts() {
+            const defaults = [
+                { id: 1, title: 'Miks ma alustasin investeerimisega?', category: 'Algajad', date: '31.08.2026', image: 'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=800', summary: 'Esimene postitus sellest, mis mind üldse motiveeris oma rahaasju korda tegema...', content: 'Investeerimine pole ammu enam ainult ülikondades meeste pärusmaa. Minu eesmärk on saavutada täielik finantsiline sõltumatus.' },
+                { id: 2, title: 'Kuidas kogun meelerahufondi?', category: 'Säästmine', date: '15.08.2026', image: 'https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=800', summary: 'Enne aktsiate ostmist on oluline omada tagavara. Räägin 3 kuu reeglist.', content: 'Meelerahufond on sinu finantsiline turvavõrk. See annab vabaduse teha paremaid otsuseid ilma paanikata.' }
+            ];
+            localStorage.setItem('my_blog_posts', JSON.stringify(defaults));
+            return defaults;
+        }
+
+        loadPosts();
     </script>
 </body>
 </html>
