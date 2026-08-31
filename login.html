@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sisselogimine | Admin</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .login-box { max-width: 400px; background: white; margin: 80px auto; padding: 40px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; }
+        .form-group input { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; }
+        .error { color: #ef4444; font-size: 0.85rem; display: none; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="container nav-content">
+            <a href="index.html" class="logo">MinuInvesteeringud</a>
+        </div>
+    </header>
+
+    <div class="login-box">
+        <h2 style="margin-bottom: 20px; text-align: center;">Admin Logi Sisse</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label>E-post</label>
+                <input type="email" id="email" value="admin@investeerin.ee" required>
+            </div>
+            <div class="form-group">
+                <label>Parool</label>
+                <input type="password" id="password" value="parool123" required>
+            </div>
+            <button type="submit" class="btn" style="width: 100%;">Logi Sisse</button>
+            <div id="error" class="error">Vale e-post või parool!</div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('password').value;
+
+            // Vaikimisi paroolid sisselogimiseks
+            if(email === "admin@investeerin.ee" && pass === "parool123") {
+                localStorage.setItem('isAdminLoggedIn', 'true');
+                window.location.href = 'admin.html';
+            } else {
+                document.getElementById('error').style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
