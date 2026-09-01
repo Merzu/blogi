@@ -3,27 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MinuInvesteeringud | Kalkulaator</title>
+    <title>Rahamägi | Kalkulaator</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        .calc-wrapper { max-width: 600px; background: white; padding: 40px; border-radius: 12px; border: 1px solid var(--border-color); margin: 0 auto; }
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; font-weight: 600; margin-bottom: 8px; }
-        .form-group input { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 1rem; }
-        .result-box { margin-top: 30px; padding: 20px; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; text-align: center; }
-        .result-title { font-size: 0.9rem; color: #065f46; font-weight: bold; }
-        .result-val { font-size: 2rem; font-weight: 800; color: var(--accent-color); margin-top: 5px; }
-    </style>
 </head>
 <body>
 
     <header class="main-header">
         <div class="container nav-content">
-            <a href="index.html" class="logo">MinuInvesteeringud</a>
+            <a href="index.html" class="logo-link">
+                <img src="rahamagi_logo_official.png" alt="Rahamägi Logo" class="site-logo">
+            </a>
             <nav>
                 <ul>
                     <li><a href="index.html">Avaleht</a></li>
                     <li><a href="blog.html">Blogi</a></li>
+                    <li><a href="portfell.html">Portfell</a></li>
                     <li><a href="kalkulaator.html" class="active">Kalkulaator</a></li>
                     <li><a href="login.html" class="btn-login">Admin</a></li>
                 </ul>
@@ -31,55 +25,54 @@
         </div>
     </header>
 
-    <section class="container">
-        <h1 class="section-title">Liitintressi Kalkulaator</h1>
-        <div class="calc-wrapper">
-            <div class="form-group">
-                <label>Algsumma (€)</label>
-                <input type="number" id="startAmount" value="1000">
+    <main class="container" style="padding-top: 40px;">
+        <div class="card" style="max-width: 600px; margin: 0 auto;">
+            <h2 style="margin-bottom: 20px; color: var(--accent-gold);">🧮 Liitintressi Kalkulaator</h2>
+            
+            <div style="margin-bottom: 15px;">
+                <label style="display:block; margin-bottom: 5px; color: var(--text-muted);">Algsumma (€):</label>
+                <input type="number" id="calc-start" value="1000" style="width:100%; padding:10px; background:#0f172a; border:1px solid var(--border-color); color:white; border-radius:6px;">
             </div>
-            <div class="form-group">
-                <label>Igakuine sissemakse (€)</label>
-                <input type="number" id="monthlyAdd" value="200">
-            </div>
-            <div class="form-group">
-                <label>Eeldatav aastane tootlus (%)</label>
-                <input type="number" id="interestRate" value="8">
-            </div>
-            <div class="form-group">
-                <label>Periood (aastates)</label>
-                <input type="number" id="years" value="15">
-            </div>
-            <button class="btn" style="width: 100%;" onclick="calculate()">Arvuta tulemus</button>
 
-            <div class="result-box">
-                <div class="result-title">TULEVANE PORTFELLI VÄÄRTUS</div>
-                <div class="result-val" id="finalResult">0 €</div>
+            <div style="margin-bottom: 15px;">
+                <label style="display:block; margin-bottom: 5px; color: var(--text-muted);">Igakuine sissemakse (€):</label>
+                <input type="number" id="calc-monthly" value="200" style="width:100%; padding:10px; background:#0f172a; border:1px solid var(--border-color); color:white; border-radius:6px;">
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="display:block; margin-bottom: 5px; color: var(--text-muted);">Oodatav tootlus aastas (%):</label>
+                <input type="number" id="calc-rate" value="8" style="width:100%; padding:10px; background:#0f172a; border:1px solid var(--border-color); color:white; border-radius:6px;">
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <label style="display:block; margin-bottom: 5px; color: var(--text-muted);">Periood (aastates):</label>
+                <input type="number" id="calc-years" value="10" style="width:100%; padding:10px; background:#0f172a; border:1px solid var(--border-color); color:white; border-radius:6px;">
+            </div>
+
+            <button onclick="calculate()" class="btn" style="width: 100%;">Arvuta Tulemus</button>
+
+            <div id="result" style="margin-top: 25px; padding: 15px; background: #0f172a; border-radius: 8px; text-align: center; display: none;">
+                <span style="color: var(--text-muted);">Tulevikuväärtus:</span>
+                <h2 id="result-value" style="color: var(--accent-green); font-size: 2rem;">0 €</h2>
             </div>
         </div>
-    </section>
-
-    <footer>
-        <div class="container">
-            <p>&copy; 2026 MinuInvesteeringud. Kõik õigused kaitstud.</p>
-        </div>
-    </footer>
+    </main>
 
     <script>
         function calculate() {
-            const start = parseFloat(document.getElementById('startAmount').value) || 0;
-            const monthly = parseFloat(document.getElementById('monthlyAdd').value) || 0;
-            const rate = (parseFloat(document.getElementById('interestRate').value) || 0) / 100 / 12;
-            const months = (parseInt(document.getElementById('years').value) || 0) * 12;
+            const start = parseFloat(document.getElementById('calc-start').value) || 0;
+            const monthly = parseFloat(document.getElementById('calc-monthly').value) || 0;
+            const rate = (parseFloat(document.getElementById('calc-rate').value) || 0) / 100 / 12;
+            const months = (parseInt(document.getElementById('calc-years').value) || 0) * 12;
 
             let total = start;
             for (let i = 0; i < months; i++) {
-                total = total * (1 + rate) + monthly;
+                total = (total + monthly) * (1 + rate);
             }
 
-            document.getElementById('finalResult').innerText = Math.round(total).toLocaleString('et-EE') + ' €';
+            document.getElementById('result-value').innerText = total.toLocaleString('et-EE', {maximumFractionDigits: 2}) + ' €';
+            document.getElementById('result').style.display = 'block';
         }
-        calculate();
     </script>
 </body>
 </html>
