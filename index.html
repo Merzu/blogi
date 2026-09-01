@@ -3,18 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MinuInvesteeringud | Avaleht</title>
+    <title>Rahamägi | Finantsvabaduse Teekond</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <header class="main-header">
         <div class="container nav-content">
-            <a href="index.html" class="logo">MinuInvesteeringud</a>
+            <a href="index.html" class="logo-link">
+                <img src="rahamagi_logo_official.png" alt="Rahamägi Logo" class="site-logo">
+            </a>
             <nav>
                 <ul>
                     <li><a href="index.html" class="active">Avaleht</a></li>
                     <li><a href="blog.html">Blogi</a></li>
+                    <li><a href="portfell.html">Portfell</a></li>
                     <li><a href="kalkulaator.html">Kalkulaator</a></li>
                     <li><a href="login.html" class="btn-login">Admin</a></li>
                 </ul>
@@ -22,73 +25,22 @@
         </div>
     </header>
 
-    <section class="hero">
-        <div class="container">
-            <h1>Teekond Finantsvabaduseni</h1>
-            <p>Ausalt ja läbipaistvalt raha kasvatamisest, säästmisest ning investeerimisest Eestis.</p>
-            <a href="blog.html" class="btn">Loe blogi</a>
+    <main class="container" style="padding-top: 50px;">
+        <div class="card" style="text-align: center; padding: 60px 20px;">
+            <h1 style="font-size: 2.8rem; margin-bottom: 15px; color: var(--accent-gold);">Tere tulemast Rahamäele! 🚀</h1>
+            <p style="font-size: 1.2rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 30px auto;">
+                Jälgi minu teekonda finantsvabaduseni, tutvu avaliku investeerimisportfelliga ning arvuta oma liitintressi kasvu.
+            </p>
+            <div style="display: flex; gap: 15px; justify-content: center;">
+                <a href="portfell.html" class="btn">Vaata Portfelli 📊</a>
+                <a href="blog.html" class="btn" style="background: var(--card-bg); border: 1px solid var(--border-color); color: white;">Loe Blogi 📝</a>
+            </div>
         </div>
-    </section>
-
-    <section class="container">
-        <h2 class="section-title">Värsked Postitused</h2>
-        <div class="blog-grid" id="featured-posts">
-            <!-- Dünaamilised postitused ilmuvad siia -->
-        </div>
-    </section>
-
-    <section class="container">
-        <div class="newsletter-box">
-            <h2>Püsi Finantskursil!</h2>
-            <p>Liitu uudiskirjaga ja saa teavitus iga kord, kui avaldan uue postituse või portfelli ülevaate.</p>
-            <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Aitäh liitumast!');">
-                <input type="email" placeholder="Sinu e-posti aadress" required>
-                <button type="submit" class="btn">Liitu</button>
-            </form>
-        </div>
-    </section>
+    </main>
 
     <footer>
-        <div class="container">
-            <p>&copy; 2026 MinuInvesteeringud. Kõik õigused kaitstud.</p>
-        </div>
+        <p>&copy; 2026 Rahamägi Blogi. Kõik õigused kaitstud.</p>
     </footer>
 
-    <script>
-        // Lae postitused brauseri mälust
-        function loadPosts() {
-            const posts = JSON.parse(localStorage.getItem('my_blog_posts')) || getInitialPosts();
-            const container = document.getElementById('featured-posts');
-            container.innerHTML = '';
-
-            posts.slice(0, 3).forEach(post => {
-                container.innerHTML += `
-                    <div class="blog-card">
-                        <img src="${post.image}" alt="${post.title}">
-                        <div class="blog-card-body">
-                            <span class="blog-badge">${post.category}</span>
-                            <h3>${post.title}</h3>
-                            <p>${post.summary}</p>
-                            <div class="blog-card-footer">
-                                <span>${post.date}</span>
-                                <a href="postitus.html?id=${post.id}" class="read-more">Loe edasi &rarr;</a>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        function getInitialPosts() {
-            const defaults = [
-                { id: 1, title: 'Miks ma alustasin investeerimisega?', category: 'Algajad', date: '31.08.2026', image: 'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=800', summary: 'Esimene postitus sellest, mis mind üldse motiveeris oma rahaasju korda tegema...', content: 'Investeerimine pole ammu enam ainult ülikondades meeste pärusmaa. Minu eesmärk on saavutada täielik finantsiline sõltumatus.' },
-                { id: 2, title: 'Kuidas kogun meelerahufondi?', category: 'Säästmine', date: '15.08.2026', image: 'https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=800', summary: 'Enne aktsiate ostmist on oluline omada tagavara. Räägin 3 kuu reeglist.', content: 'Meelerahufond on sinu finantsiline turvavõrk. See annab vabaduse teha paremaid otsuseid ilma paanikata.' }
-            ];
-            localStorage.setItem('my_blog_posts', JSON.stringify(defaults));
-            return defaults;
-        }
-
-        loadPosts();
-    </script>
 </body>
 </html>
