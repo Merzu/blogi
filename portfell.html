@@ -3,25 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rahamägi | Portfelli Töölauale</title>
+    <title>Rahamägi | Portfelli Töölaud</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Chart.js diagrammide teegi laadimine -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root {
-            --bg-dark: #0f172a;
-            --card-bg: #1e293b;
-            --border-color: #334155;
-            --accent-green: #10b981;
-            --accent-gold: #f59e0b;
-            --text-main: #f8fafc;
-        }
-
-        body { background-color: var(--bg-dark); color: var(--text-main); font-family: system-ui, sans-serif; }
-
         .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
             margin: 30px 0;
         }
@@ -31,11 +19,10 @@
             border: 1px solid var(--border-color);
             padding: 24px;
             border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
         }
 
-        .metric-card span { color: #94a3b8; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; }
-        .metric-card h2 { font-size: 2.2rem; margin-top: 8px; color: var(--text-main); }
+        .metric-card span { color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; }
+        .metric-card h2 { font-size: 2rem; margin-top: 8px; color: var(--text-main); }
         .metric-card.highlight h2 { color: var(--accent-gold); }
 
         .form-section {
@@ -53,7 +40,7 @@
             margin-top: 15px;
         }
 
-        .form-group label { display: block; font-size: 0.85rem; color: #94a3b8; margin-bottom: 5px; }
+        .form-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px; }
         .form-group input, .form-group select {
             width: 100%;
             padding: 10px 14px;
@@ -82,12 +69,11 @@
             border-radius: 12px;
         }
 
-        /* Excel-stiilis tabeli kujundus */
         .excel-table-container {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 12px;
-            overflow: hidden;
+            overflow-x: auto;
             margin-bottom: 50px;
         }
 
@@ -99,7 +85,7 @@
 
         .excel-table th {
             background: #0f172a;
-            color: #94a3b8;
+            color: var(--text-muted);
             padding: 14px 18px;
             font-size: 0.85rem;
             text-transform: uppercase;
@@ -138,12 +124,15 @@
 
     <header class="main-header">
         <div class="container nav-content">
-            <a href="index.html" class="logo">RAHAMÄGI 🚀</a>
+            <a href="index.html" class="logo-link">
+                <img src="rahamagi_logo_official.png" alt="Rahamägi Logo" class="site-logo">
+            </a>
             <nav>
                 <ul>
                     <li><a href="index.html">Avaleht</a></li>
                     <li><a href="blog.html">Blogi</a></li>
                     <li><a href="portfell.html" class="active">Portfell</a></li>
+                    <li><a href="kalkulaator.html">Kalkulaator</a></li>
                     <li><a href="login.html" class="btn-login">Admin</a></li>
                 </ul>
             </nav>
@@ -152,10 +141,9 @@
 
     <main class="container">
         
-        <!-- TOP METRICS -->
         <div class="dashboard-grid">
             <div class="metric-card highlight">
-                <span>Portfelli Koguvaartus</span>
+                <span>Portfelli Koguväärtus</span>
                 <h2 id="total-value">0,00 €</h2>
             </div>
             <div class="metric-card">
@@ -168,10 +156,9 @@
             </div>
         </div>
 
-        <!-- ADD TRANSACTION FORM (EXCEL INPUT) -->
         <div class="form-section">
             <h3 style="margin-bottom: 5px; color: var(--accent-gold);">+ Lisa Uus Tehing / Ost</h3>
-            <p style="color: #94a3b8; font-size: 0.9rem;">Sisesta uue tehingu andmed (nt: S&P 500, 2000 €):</p>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Sisesta uue tehingu andmed (nt: S&P 500, 2000 €):</p>
             
             <form id="transaction-form">
                 <div class="form-grid">
@@ -201,19 +188,17 @@
             </form>
         </div>
 
-        <!-- DIAGRAMMID / CHARTS -->
         <div class="charts-grid">
             <div class="chart-card">
-                <h4 style="margin-bottom: 15px; color: #94a3b8;">Varade Jaotus (Sektordiagramm)</h4>
+                <h4 style="margin-bottom: 15px; color: var(--text-muted);">Varade Jaotus (Sektordiagramm)</h4>
                 <canvas id="allocationChart"></canvas>
             </div>
             <div class="chart-card">
-                <h4 style="margin-bottom: 15px; color: #94a3b8;">Portfelli Kasv Läbi Aja</h4>
+                <h4 style="margin-bottom: 15px; color: var(--text-muted);">Portfelli Kasv Läbi Aja</h4>
                 <canvas id="growthChart"></canvas>
             </div>
         </div>
 
-        <!-- EXCEL-LIKE DATA TABLE -->
         <h3 style="margin-bottom: 15px;">📊 Tehingute Logi (Exceli Tabel)</h3>
         <div class="excel-table-container">
             <table class="excel-table">
@@ -227,7 +212,6 @@
                     </tr>
                 </thead>
                 <tbody id="table-body">
-                    <!-- Tehingud ilmuvad siia -->
                 </tbody>
             </table>
         </div>
@@ -235,10 +219,8 @@
     </main>
 
     <script>
-        // Set default date to today
         document.getElementById('tx-date').valueAsDate = new Date();
 
-        // Load saved transactions or initialize default dataset
         let transactions = JSON.parse(localStorage.getItem('rahamagi_portfolio')) || [
             { id: 1, date: '2026-08-15', asset: 'S&P 500 Index', type: 'OST', amount: 50.00 },
             { id: 2, date: '2026-08-31', asset: 'S&P 500 Index', type: 'OST', amount: 2000.00 },
@@ -255,7 +237,6 @@
             renderCharts();
         }
 
-        // Add Transaction
         document.getElementById('transaction-form').addEventListener('submit', function(e) {
             e.preventDefault();
             const date = document.getElementById('tx-date').value;
@@ -263,33 +244,22 @@
             const type = document.getElementById('tx-type').value;
             const amount = parseFloat(document.getElementById('tx-amount').value);
 
-            transactions.push({
-                id: Date.now(),
-                date,
-                asset,
-                type,
-                amount
-            });
+            transactions.push({ id: Date.now(), date, asset, type, amount });
 
-            // Reset inputs
             document.getElementById('tx-asset').value = '';
             document.getElementById('tx-amount').value = '';
 
             saveAndRender();
         });
 
-        // Delete Transaction
         function deleteTx(id) {
             transactions = transactions.filter(t => t.id !== id);
             saveAndRender();
         }
 
-        // Render Table
         function renderTable() {
             const tbody = document.getElementById('table-body');
             tbody.innerHTML = '';
-
-            // Sort by date descending
             const sorted = [...transactions].sort((a,b) => new Date(b.date) - new Date(a.date));
 
             sorted.forEach(t => {
@@ -307,7 +277,6 @@
             });
         }
 
-        // Render Top Metrics
         function renderMetrics() {
             let total = 0;
             const assetsSet = new Set();
@@ -323,9 +292,7 @@
             document.getElementById('total-assets').innerText = assetsSet.size;
         }
 
-        // Render Charts
         function renderCharts() {
-            // Aggregate by Asset for Doughnut Chart
             const assetTotals = {};
             transactions.forEach(t => {
                 if(!assetTotals[t.asset]) assetTotals[t.asset] = 0;
@@ -335,7 +302,6 @@
             const assetLabels = Object.keys(assetTotals);
             const assetData = Object.values(assetTotals);
 
-            // 1. Doughnut Chart (Varade jaotus)
             const ctx1 = document.getElementById('allocationChart').getContext('2d');
             if(allocationChartInstance) allocationChartInstance.destroy();
             
@@ -350,12 +316,9 @@
                         borderColor: '#1e293b'
                     }]
                 },
-                options: {
-                    plugins: { legend: { labels: { color: '#f8fafc' } } }
-                }
+                options: { plugins: { legend: { labels: { color: '#f8fafc' } } } }
             });
 
-            // Aggregate Cumulative Growth by Date for Line Chart
             const sortedByDate = [...transactions].sort((a,b) => new Date(a.date) - new Date(b.date));
             const dates = [];
             const cumulativeValues = [];
@@ -367,7 +330,6 @@
                 cumulativeValues.push(currentTotal);
             });
 
-            // 2. Line Chart (Kasv läbi aja)
             const ctx2 = document.getElementById('growthChart').getContext('2d');
             if(growthChartInstance) growthChartInstance.destroy();
 
@@ -394,7 +356,6 @@
             });
         }
 
-        // Initialize on load
         saveAndRender();
     </script>
 </body>
