@@ -3,18 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MinuInvesteeringud | Blogi</title>
+    <title>Rahamägi | Blogi</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <header class="main-header">
         <div class="container nav-content">
-            <a href="index.html" class="logo">MinuInvesteeringud</a>
+            <a href="index.html" class="logo-link">
+                <img src="rahamagi_logo_official.png" alt="Rahamägi Logo" class="site-logo">
+            </a>
             <nav>
                 <ul>
                     <li><a href="index.html">Avaleht</a></li>
                     <li><a href="blog.html" class="active">Blogi</a></li>
+                    <li><a href="portfell.html">Portfell</a></li>
                     <li><a href="kalkulaator.html">Kalkulaator</a></li>
                     <li><a href="login.html" class="btn-login">Admin</a></li>
                 </ul>
@@ -22,43 +25,27 @@
         </div>
     </header>
 
-    <section class="container">
-        <h1 class="section-title">Kõik Artiklid</h1>
-        <div class="blog-grid" id="all-posts">
-            <!-- Kõik postitused laetakse siia -->
-        </div>
-    </section>
+    <main class="container" style="padding-top: 40px;">
+        <h2 style="margin-bottom: 25px;">Mõtted ja Postitused</h2>
+
+        <article class="card">
+            <span style="color: var(--accent-gold); font-size: 0.85rem;">1. September 2026</span>
+            <h3 style="margin: 10px 0;">Kuidas alustada indeksi-fondidesse investeerimist?</h3>
+            <p style="color: var(--text-muted); margin-bottom: 15px;">S&P 500 ja VWCE on kaks kõige populaarsemat valikut algajale investeerijale. Räägime läbi miks ja kuidas alustada.</p>
+            <a href="#" class="btn" style="padding: 6px 12px; font-size: 0.9rem;">Loe edasi &rarr;</a>
+        </article>
+
+        <article class="card">
+            <span style="color: var(--accent-gold); font-size: 0.85rem;">15. August 2026</span>
+            <h3 style="margin: 10px 0;">Minu esimene 50-eurone investeering</h3>
+            <p style="color: var(--text-muted); margin-bottom: 15px;">Iga teekond algab esimesest sammust. Siin on ülevaade minu esimestest tehingutest ja eesmärkidest.</p>
+            <a href="#" class="btn" style="padding: 6px 12px; font-size: 0.9rem;">Loe edasi &rarr;</a>
+        </article>
+    </main>
 
     <footer>
-        <div class="container">
-            <p>&copy; 2026 MinuInvesteeringud. Kõik õigused kaitstud.</p>
-        </div>
+        <p>&copy; 2026 Rahamägi Blogi. Kõik õigused kaitstud.</p>
     </footer>
 
-    <script>
-        function loadAllPosts() {
-            const posts = JSON.parse(localStorage.getItem('my_blog_posts')) || [];
-            const container = document.getElementById('all-posts');
-            container.innerHTML = '';
-
-            posts.forEach(post => {
-                container.innerHTML += `
-                    <div class="blog-card">
-                        <img src="${post.image}" alt="${post.title}">
-                        <div class="blog-card-body">
-                            <span class="blog-badge">${post.category}</span>
-                            <h3>${post.title}</h3>
-                            <p>${post.summary}</p>
-                            <div class="blog-card-footer">
-                                <span>${post.date}</span>
-                                <a href="postitus.html?id=${post.id}" class="read-more">Loe edasi &rarr;</a>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-        loadAllPosts();
-    </script>
 </body>
 </html>
