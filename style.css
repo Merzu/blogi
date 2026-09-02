@@ -78,19 +78,6 @@ nav a:hover, nav a.active {
     color: var(--accent-green);
 }
 
-.btn-login {
-    background: transparent;
-    border: 1px solid var(--accent-green);
-    color: var(--accent-green) !important;
-    padding: 6px 14px;
-    border-radius: 6px;
-}
-
-.btn-login:hover {
-    background: var(--accent-green);
-    color: #000 !important;
-}
-
 /* Nupud */
 .btn {
     display: inline-block;
@@ -107,6 +94,23 @@ nav a:hover, nav a.active {
 
 .btn:hover {
     background: #059669;
+    color: white;
+}
+
+.btn-logout {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid #ef4444;
+    color: #f87171;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.btn-logout:hover {
+    background: #ef4444;
     color: white;
 }
 
