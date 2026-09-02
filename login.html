@@ -3,44 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rahamägi | Admin Sisselogimine</title>
+    <title>Rahamägi | Sisselogimine</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body style="display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px;">
 
-    <header class="main-header">
-        <div class="container nav-content">
-            <a href="index.html" class="logo-link">
-                <img src="rahamagi_logo_official.png" alt="Rahamägi Logo" class="site-logo">
-            </a>
-            <nav>
-                <ul>
-                    <li><a href="index.html">Avaleht</a></li>
-                    <li><a href="blog.html">Blogi</a></li>
-                    <li><a href="portfell.html">Portfell</a></li>
-                    <li><a href="kalkulaator.html">Kalkulaator</a></li>
-                    <li><a href="login.html" class="btn-login active">Admin</a></li>
-                </ul>
-            </nav>
+    <div class="card" style="max-width: 420px; width: 100%; text-align: center; padding: 40px 30px;">
+        <img src="rahamagi_logo_official.png" alt="Logo" style="height: 70px; margin-bottom: 15px; border-radius: 12px;">
+        <h2 style="margin-bottom: 8px;">Sisselogimine</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 25px;">Jätkamiseks logi sisse Adminina või Külalisena.</p>
+
+        <!-- ADMIN SISSELOGIMINE -->
+        <form id="admin-login-form" style="text-align: left; margin-bottom: 25px;">
+            <div style="margin-bottom: 12px;">
+                <label style="display:block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 4px;">Kasutajanimi (Admin)</label>
+                <input type="text" id="admin-user" required placeholder="admin" style="width:100%; padding:10px; background:#0f172a; border:1px solid var(--border-color); color:white; border-radius:6px;">
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="display:block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 4px;">Parool</label>
+                <input type="password" id="admin-pass" required placeholder="••••••••" style="width:100%; padding:10px; background:#0f172a; border:1px solid var(--border-color); color:white; border-radius:6px;">
+            </div>
+            <p id="error-msg" style="color: #ef4444; font-size: 0.85rem; display: none; margin-bottom: 10px;">Vale kasutajanimi või parool!</p>
+            <button type="submit" class="btn" style="width: 100%;">Logi sisse Adminina 👑</button>
+        </form>
+
+        <div style="border-top: 1px solid var(--border-color); padding-top: 20px;">
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 12px;">Tahad lihtsalt tutvuda blogi ja portfelliga?</p>
+            <button onclick="loginAsGuest()" class="btn" style="width: 100%; background: transparent; border: 1px solid var(--accent-green); color: var(--accent-green);">Jätka Külalisena 👤</button>
         </div>
-    </header>
+    </div>
 
-    <main class="container" style="padding-top: 60px;">
-        <div class="card" style="max-width: 400px; margin: 0 auto;">
-            <h3 style="margin-bottom: 20px; text-align: center;">🔒 Admin SISSELOGIMINE</h3>
-            <form onsubmit="event.preventDefault(); alert('Sisse logitud!');">
-                <div style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom: 5px; color: var(--text-muted);">Kasutajanimi</label>
-                    <input type="text" required style="width:100%; padding:10px; background:#0f172a; border:1px solid var(--border-color); color:white; border-radius:6px;">
-                </div>
-                <div style="margin-bottom: 20px;">
-                    <label style="display:block; margin-bottom: 5px; color: var(--text-muted);">Parool</label>
-                    <input type="password" required style="width:100%; padding:10px; background:#0f172a; border:1px solid var(--border-color); color:white; border-radius:6px;">
-                </div>
-                <button type="submit" class="btn" style="width: 100%;">Logi Sisse</button>
-            </form>
-        </div>
-    </main>
+    <script>
+        // Admin vaikimisi andmed: kasutaja: admin | parool: admin123
+        document.getElementById('admin-login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const u = document.getElementById('admin-user').value;
+            const p = document.getElementById('admin-pass').value;
 
+            if (u === 'admin' && p === 'admin123') {
+                localStorage.setItem('rahamagi_user', JSON.stringify({ role: 'admin', name: 'Admin' }));
+                window.location.href = 'index.html';
+            } else {
+                document.getElementById('error-msg').style.display = 'block';
+            }
+        });
+
+        function loginAsGuest() {
+            localStorage.setItem('rahamagi_user', JSON.stringify({ role: 'guest', name: 'Külaline' }));
+            window.location.href = 'index.html';
+        }
+    </script>
 </body>
 </html>
