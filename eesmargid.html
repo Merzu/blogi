@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rahamägi | 10 Tuleviku Eesmärki</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="auth.js"></script>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="container nav-content">
+            <a href="index.html" class="logo-link">
+                <img src="rahamagi_logo_official.png" alt="Rahamägi Logo" class="site-logo">
+            </a>
+            <nav><ul id="main-nav-links"></ul></nav>
+        </div>
+    </header>
+
+    <main class="container" style="padding-top: 40px; max-width: 800px;">
+        <div class="card" style="border-left: 4px solid var(--accent-gold);">
+            <h1 style="color: var(--accent-gold); margin-bottom: 5px;">🎯 Minu 10 Tuleviku Eesmärki</h1>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">🔒 *Privaatne leht – nähtav ainult Adminile.* Saad eesmärke igal ajal muuta ja märkida tehtuks.</p>
+        </div>
+
+        <div id="goals-container" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
+            <!-- Eesmärgid laetakse siia JS abil -->
+        </div>
+
+        <div style="margin-top: 30px; text-align: right; margin-bottom: 50px;">
+            <button onclick="saveGoals()" class="btn" style="padding: 12px 30px; font-size: 1rem;">Salvesta Muudatused 💾</button>
+        </div>
+    </main>
+
+    <script>
+        // Vaikimisi 10 eesmärki
+        const defaultGoals = [
+            { id: 1, text: "Kasvatada investeerimisportfell 50 000 eurost kõrgemale", done: false },
+            { id: 2, text: "Saavutada igakuine passiivne dividenditulu 200 €", done: false },
+            { id: 3, text: "Osta esimene üürikinnisvara objekt", done: false },
+            { id: 4, text: "Lugeda läbi 12 finants- ja investeerimisraamatut aastas", done: false },
+            { id: 5, text: "Automiseerida igakuine 500 € sissemakse S&P 500 fondi", done: false },
+            { id: 6, text: "Lüüa kokku ja hoida hädaabifondi 6 kuu kulude ulatuses", done: false },
+            { id: 7, text: "Reisida Aasiasse ilma töömuresid tundmata", done: false },
+            { id: 8, text: "Luua lisatulu allikas oma veebiprojektist", done: false },
+            { id: 9, text: "Koolitada ennast optsioonide ja võlakirjade teemal", done: false },
+            { id: 10, text: "Saavutada täielik finantsvabadus", done: false }
+        ];
+
+        let goals = JSON.parse(localStorage.getItem('rahamagi_goals')) || defaultGoals;
+
+        function renderGoals() {
+            const container = document.getElementById('goals-container');
+            container.innerHTML = '';
+
+            goals.forEach((g, index) => {
+                const item = document.createElement('div');
+                item.className = 'card';
+                item.style.padding = '15px 20px';
+                item.style.margin = '0';
+                item.style.display = 'flex';
+                item.style.alignItems = 'center';
+                item.style.gap = '15px';
+
+                item.innerHTML = `
+                    <span style="font-weight: bold; color: var(--accent-gold); font-size: 1.1rem; width: 30px;">#${index + 1}</span>
+                    <input type="checkbox" ${g.done ? 'checked' : ''} onchange="toggleDone(${index})" style="width: 20px; height: 20px; cursor: pointer;">
+                    <input type="text" value="${g.text}" onchange="updateText(${index}, this.value)" style="flex: 1; padding: 8px 12px; background: #0f172a; border: 1px solid var(--border-color); color: white; border-radius: 6px; font-size: 1rem; ${g.done ? 'text-decoration: line-through; opacity: 0.6;' : ''}">
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function toggleDone(index) {
+            goals[index].done = !goals[index].done;
+            renderGoals();
+        }
+
+        function updateText(index, val) {
+            goals[index].text = val;
+        }
+
+        function saveGoals() {
+            localStorage.setItem('rahamagi_goals', JSON.stringify(goals));
+            alert('Eesmärgid edukalt salvestatud!');
+        }
+
+        renderGoals();
+    </script>
+</body>
+</html>
