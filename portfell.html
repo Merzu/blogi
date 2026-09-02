@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rahamägi | Portfelli Töölaud</title>
     <link rel="stylesheet" href="style.css">
+    <script src="auth.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         .dashboard-grid {
@@ -128,18 +129,12 @@
                 <img src="rahamagi_logo_official.png" alt="Rahamägi Logo" class="site-logo">
             </a>
             <nav>
-                <ul>
-                    <li><a href="index.html">Avaleht</a></li>
-                    <li><a href="blog.html">Blogi</a></li>
-                    <li><a href="portfell.html" class="active">Portfell</a></li>
-                    <li><a href="kalkulaator.html">Kalkulaator</a></li>
-                    <li><a href="login.html" class="btn-login">Admin</a></li>
-                </ul>
+                <ul id="main-nav-links"></ul>
             </nav>
         </div>
     </header>
 
-    <main class="container">
+    <main class="container" style="padding-top: 30px;">
         
         <div class="dashboard-grid">
             <div class="metric-card highlight">
