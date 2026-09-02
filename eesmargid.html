@@ -6,6 +6,82 @@
     <title>Rahamägi | 10 Tuleviku Eesmärki</title>
     <link rel="stylesheet" href="style.css">
     <script src="auth.js"></script>
+    <style>
+        .goal-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .goal-card:hover {
+            border-color: #475569;
+        }
+
+        .goal-card.completed {
+            background: rgba(16, 185, 129, 0.05);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .goal-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .goal-num {
+            font-weight: bold;
+            color: var(--accent-gold);
+            font-size: 1.1rem;
+            min-width: 35px;
+        }
+
+        .goal-text {
+            font-size: 1.05rem;
+            color: var(--text-main);
+            line-height: 1.4;
+        }
+
+        .goal-card.completed .goal-text {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .btn-edit-action {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-edit-action:hover {
+            background: var(--accent-gold);
+            color: #0f172a;
+            border-color: var(--accent-gold);
+        }
+
+        .edit-input {
+            width: 100%;
+            padding: 8px 12px;
+            background: #0f172a;
+            border: 1px solid var(--accent-gold);
+            color: white;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+    </style>
 </head>
 <body>
 
@@ -18,72 +94,101 @@
         </div>
     </header>
 
-    <main class="container" style="padding-top: 40px; max-width: 800px;">
-        <div class="card" style="border-left: 4px solid var(--accent-gold);">
+    <main class="container" style="padding-top: 40px; max-width: 850px;">
+        <div class="card" style="border-left: 4px solid var(--accent-gold); margin-bottom: 25px;">
             <h1 style="color: var(--accent-gold); margin-bottom: 5px;">🎯 Minu 10 Tuleviku Eesmärki</h1>
-            <p style="color: var(--text-muted); font-size: 0.95rem;">🔒 *Privaatne leht – nähtav ainult Adminile.* Saad eesmärke igal ajal muuta ja märkida tehtuks.</p>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">
+                🔒 *Privaatne leht – nähtav ainult Adminile.* Teksti muutmiseks vajuta soovitud eesmärgi kõrval nuppu <strong>"✏️ Muuda"</strong>.
+            </p>
         </div>
 
-        <div id="goals-container" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
-            <!-- Eesmärgid laetakse siia JS abil -->
-        </div>
-
-        <div style="margin-top: 30px; text-align: right; margin-bottom: 50px;">
-            <button onclick="saveGoals()" class="btn" style="padding: 12px 30px; font-size: 1rem;">Salvesta Muudatused 💾</button>
+        <div id="goals-container" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 50px;">
+            <!-- Eesmärgid laetakse dünaamiliselt siia -->
         </div>
     </main>
 
     <script>
-        // Vaikimisi 10 eesmärki
         const defaultGoals = [
-            { id: 1, text: "Kasvatada investeerimisportfell 50 000 eurost kõrgemale", done: false },
-            { id: 2, text: "Saavutada igakuine passiivne dividenditulu 200 €", done: false },
-            { id: 3, text: "Osta esimene üürikinnisvara objekt", done: false },
-            { id: 4, text: "Lugeda läbi 12 finants- ja investeerimisraamatut aastas", done: false },
-            { id: 5, text: "Automiseerida igakuine 500 € sissemakse S&P 500 fondi", done: false },
-            { id: 6, text: "Lüüa kokku ja hoida hädaabifondi 6 kuu kulude ulatuses", done: false },
-            { id: 7, text: "Reisida Aasiasse ilma töömuresid tundmata", done: false },
-            { id: 8, text: "Luua lisatulu allikas oma veebiprojektist", done: false },
-            { id: 9, text: "Koolitada ennast optsioonide ja võlakirjade teemal", done: false },
-            { id: 10, text: "Saavutada täielik finantsvabadus", done: false }
+            { id: 1, text: "Kasvatada investeerimisportfell 50 000 eurost kõrgemale", done: false, isEditing: false },
+            { id: 2, text: "Saavutada igakuine passiivne dividenditulu 200 €", done: false, isEditing: false },
+            { id: 3, text: "Osta esimene üürikinnisvara objekt", done: false, isEditing: false },
+            { id: 4, text: "Lugeda läbi 12 finants- ja investeerimisraamatut aastas", done: false, isEditing: false },
+            { id: 5, text: "Automiseerida igakuine 500 € sissemakse S&P 500 fondi", done: false, isEditing: false },
+            { id: 6, text: "Lüüa kokku ja hoida hädaabifondi 6 kuu kulude ulatuses", done: false, isEditing: false },
+            { id: 7, text: "Reisida Aasiasse ilma töömuresid tundmata", done: false, isEditing: false },
+            { id: 8, text: "Luua lisatulu allikas oma veebiprojektist", done: false, isEditing: false },
+            { id: 9, text: "Koolitada ennast optsioonide ja võlakirjade teemal", done: false, isEditing: false },
+            { id: 10, text: "Saavutada täielik finantsvabadus", done: false, isEditing: false }
         ];
 
         let goals = JSON.parse(localStorage.getItem('rahamagi_goals')) || defaultGoals;
+
+        function saveGoalsStorage() {
+            localStorage.setItem('rahamagi_goals', JSON.stringify(goals));
+        }
 
         function renderGoals() {
             const container = document.getElementById('goals-container');
             container.innerHTML = '';
 
             goals.forEach((g, index) => {
-                const item = document.createElement('div');
-                item.className = 'card';
-                item.style.padding = '15px 20px';
-                item.style.margin = '0';
-                item.style.display = 'flex';
-                item.style.alignItems = 'center';
-                item.style.gap = '15px';
+                const card = document.createElement('div');
+                card.className = `goal-card ${g.done ? 'completed' : ''}`;
 
-                item.innerHTML = `
-                    <span style="font-weight: bold; color: var(--accent-gold); font-size: 1.1rem; width: 30px;">#${index + 1}</span>
-                    <input type="checkbox" ${g.done ? 'checked' : ''} onchange="toggleDone(${index})" style="width: 20px; height: 20px; cursor: pointer;">
-                    <input type="text" value="${g.text}" onchange="updateText(${index}, this.value)" style="flex: 1; padding: 8px 12px; background: #0f172a; border: 1px solid var(--border-color); color: white; border-radius: 6px; font-size: 1rem; ${g.done ? 'text-decoration: line-through; opacity: 0.6;' : ''}">
-                `;
-                container.appendChild(item);
+                if (g.isEditing) {
+                    // MUIDA REŽIIM (INPUT FIELD)
+                    card.innerHTML = `
+                        <div class="goal-left">
+                            <span class="goal-num">#${index + 1}</span>
+                            <input type="text" id="input-${index}" class="edit-input" value="${g.text}">
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <button onclick="saveSingleGoal(${index})" class="btn" style="padding: 6px 14px; font-size: 0.85rem;">Salvesta 💾</button>
+                            <button onclick="cancelEdit(${index})" class="btn-edit-action">Tühista</button>
+                        </div>
+                    `;
+                } else {
+                    // ILUS VAATAMISREŽIIM (VAJKIMISI)
+                    card.innerHTML = `
+                        <div class="goal-left">
+                            <span class="goal-num">#${index + 1}</span>
+                            <input type="checkbox" ${g.done ? 'checked' : ''} onchange="toggleDone(${index})" style="width: 20px; height: 20px; cursor: pointer;">
+                            <span class="goal-text">${g.text}</span>
+                        </div>
+                        <button onclick="enableEdit(${index})" class="btn-edit-action">✏️ Muuda</button>
+                    `;
+                }
+
+                container.appendChild(card);
             });
         }
 
         function toggleDone(index) {
             goals[index].done = !goals[index].done;
+            saveGoalsStorage();
             renderGoals();
         }
 
-        function updateText(index, val) {
-            goals[index].text = val;
+        function enableEdit(index) {
+            goals[index].isEditing = true;
+            renderGoals();
+            const inputEl = document.getElementById(`input-${index}`);
+            if (inputEl) inputEl.focus();
         }
 
-        function saveGoals() {
-            localStorage.setItem('rahamagi_goals', JSON.stringify(goals));
-            alert('Eesmärgid edukalt salvestatud!');
+        function cancelEdit(index) {
+            goals[index].isEditing = false;
+            renderGoals();
+        }
+
+        function saveSingleGoal(index) {
+            const inputEl = document.getElementById(`input-${index}`);
+            if (inputEl && inputEl.value.trim() !== '') {
+                goals[index].text = inputEl.value.trim();
+                goals[index].isEditing = false;
+                saveGoalsStorage();
+                renderGoals();
+            }
         }
 
         renderGoals();
