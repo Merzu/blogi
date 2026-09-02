@@ -19,9 +19,7 @@
             transition: all 0.2s ease;
         }
 
-        .goal-card:hover {
-            border-color: #475569;
-        }
+        .goal-card:hover { border-color: #475569; }
 
         .goal-card.completed {
             background: rgba(16, 185, 129, 0.05);
@@ -81,6 +79,19 @@
             border-radius: 6px;
             font-size: 1rem;
         }
+
+        .role-notice {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid var(--accent-gold);
+            color: var(--accent-gold);
+            padding: 12px 18px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
     </style>
 </head>
 <body>
@@ -95,19 +106,33 @@
     </header>
 
     <main class="container" style="padding-top: 40px; max-width: 850px;">
-        <div class="card" style="border-left: 4px solid var(--accent-gold); margin-bottom: 25px;">
+        <div class="card" style="border-left: 4px solid var(--accent-gold); margin-bottom: 20px;">
             <h1 style="color: var(--accent-gold); margin-bottom: 5px;">🎯 Minu 10 Tuleviku Eesmärki</h1>
             <p style="color: var(--text-muted); font-size: 0.95rem;">
-                🔒 *Privaatne leht – nähtav ainult Adminile.* Teksti muutmiseks vajuta soovitud eesmärgi kõrval nuppu <strong>"✏️ Muuda"</strong>.
+                🔒 *Kaitstud leht.* Siin on välja toodud minu pikemaajalised sihid ja teetähised.
             </p>
         </div>
 
+        <div id="role-notice-container"></div>
+
         <div id="goals-container" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 50px;">
-            <!-- Eesmärgid laetakse dünaamiliselt siia -->
         </div>
     </main>
 
     <script>
+        const currentUser = JSON.parse(localStorage.getItem('rahamagi_user'));
+        const isAdmin = currentUser?.role === 'admin';
+
+        // Eri-Külalise teavitus
+        if (currentUser?.role === 'specialguest') {
+            document.getElementById('role-notice-container').innerHTML = `
+                <div class="role-notice">
+                    <span>⭐</span>
+                    <div><strong>Eri-Külalise vaatamisrežiim:</strong> Sulle on avatud eesmärkide leht, kuid muudatuste tegemine on lubatud ainult Admin kasutajale.</div>
+                </div>
+            `;
+        }
+
         const defaultGoals = [
             { id: 1, text: "Kasvatada investeerimisportfell 50 000 eurost kõrgemale", done: false, isEditing: false },
             { id: 2, text: "Saavutada igakuine passiivne dividenditulu 200 €", done: false, isEditing: false },
@@ -124,7 +149,9 @@
         let goals = JSON.parse(localStorage.getItem('rahamagi_goals')) || defaultGoals;
 
         function saveGoalsStorage() {
-            localStorage.setItem('rahamagi_goals', JSON.stringify(goals));
+            if (isAdmin) {
+                localStorage.setItem('rahamagi_goals', JSON.stringify(goals));
+            }
         }
 
         function renderGoals() {
@@ -135,8 +162,7 @@
                 const card = document.createElement('div');
                 card.className = `goal-card ${g.done ? 'completed' : ''}`;
 
-                if (g.isEditing) {
-                    // MUIDA REŽIIM (INPUT FIELD)
+                if (g.isEditing && isAdmin) {
                     card.innerHTML = `
                         <div class="goal-left">
                             <span class="goal-num">#${index + 1}</span>
@@ -148,14 +174,13 @@
                         </div>
                     `;
                 } else {
-                    // ILUS VAATAMISREŽIIM (VAJKIMISI)
                     card.innerHTML = `
                         <div class="goal-left">
                             <span class="goal-num">#${index + 1}</span>
-                            <input type="checkbox" ${g.done ? 'checked' : ''} onchange="toggleDone(${index})" style="width: 20px; height: 20px; cursor: pointer;">
+                            <input type="checkbox" ${g.done ? 'checked' : ''} ${isAdmin ? `onchange="toggleDone(${index})"` : 'disabled'} style="width: 20px; height: 20px; ${isAdmin ? 'cursor: pointer;' : 'cursor: not-allowed;'}">
                             <span class="goal-text">${g.text}</span>
                         </div>
-                        <button onclick="enableEdit(${index})" class="btn-edit-action">✏️ Muuda</button>
+                        ${isAdmin ? `<button onclick="enableEdit(${index})" class="btn-edit-action">✏️ Muuda</button>` : ''}
                     `;
                 }
 
@@ -164,12 +189,14 @@
         }
 
         function toggleDone(index) {
+            if (!isAdmin) return;
             goals[index].done = !goals[index].done;
             saveGoalsStorage();
             renderGoals();
         }
 
         function enableEdit(index) {
+            if (!isAdmin) return;
             goals[index].isEditing = true;
             renderGoals();
             const inputEl = document.getElementById(`input-${index}`);
@@ -182,6 +209,7 @@
         }
 
         function saveSingleGoal(index) {
+            if (!isAdmin) return;
             const inputEl = document.getElementById(`input-${index}`);
             if (inputEl && inputEl.value.trim() !== '') {
                 goals[index].text = inputEl.value.trim();
