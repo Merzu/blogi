@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rahamägi | Postitus</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="auth.js"></script>
+    <style>
+        .post-wrapper {
+            max-width: 800px;
+            margin: 40px auto 60px auto;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 35px;
+        }
+
+        .post-header {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+
+        .post-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .post-full-title {
+            font-size: 2.2rem;
+            color: var(--text-main);
+            line-height: 1.25;
+        }
+
+        /* Postituse sisu kujundus koos piltidega teksti vahel */
+        .post-body {
+            color: #cbd5e1;
+            font-size: 1.05rem;
+            line-height: 1.75;
+        }
+
+        .post-body p { margin-bottom: 18px; }
+        .post-body h1, .post-body h2, .post-body h3 { color: var(--text-main); margin: 25px 0 12px 0; }
+        
+        /* Teksti sees olevate piltide automaatne kohandamine */
+        .post-body img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 20px 0;
+            display: block;
+            border: 1px solid var(--border-color);
+        }
+
+        .post-body ul, .post-body ol { margin-left: 20px; margin-bottom: 18px; }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="container nav-content">
+            <a href="index.html" class="logo-link">
+                <img src="rahamagi_logo_official.png" alt="Rahamägi Logo" class="site-logo">
+            </a>
+            <nav><ul id="main-nav-links"></ul></nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div style="margin-top: 25px;">
+            <a href="blog.html" style="color: var(--accent-gold); text-decoration: none; font-size: 0.95rem; font-weight: bold;">← Tagasi blogisse</a>
+        </div>
+
+        <div id="post-view-container">
+            <!-- POSTITUSE SISU LAETAKSE SIIA JS ABIL -->
+        </div>
+    </main>
+
+    <script>
+        const currentUser = JSON.parse(localStorage.getItem('rahamagi_user'));
+        const isAdmin = currentUser?.role === 'admin';
+
+        // Loe URL-ist postituse ID (nt post.html?id=101)
+        const urlParams = new URLSearchParams(window.location.search);
+        const postId = urlParams.get('id');
+
+        const posts = JSON.parse(localStorage.getItem('rahamagi_posts')) || [];
+        const post = posts.find(p => p.id === postId);
+
+        const container = document.getElementById('post-view-container');
+
+        if (!post) {
+            container.innerHTML = `
+                <div class="post-wrapper" style="text-align: center; padding: 60px 20px;">
+                    <h2 style="color: #ef4444; margin-bottom: 10px;">Postitust ei leitud!</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 20px;">Võimalik, et see postitus on kustutatud või link on vigane.</p>
+                    <a href="blog.html" class="btn">Tagasi Blogisse</a>
+                </div>
+            `;
+        } else {
+            container.innerHTML = `
+                <article class="post-wrapper">
+                    <div class="post-header">
+                        <div class="post-meta">
+                            <span>🗓️ Avaldatud: ${post.date}</span>
+                            ${isAdmin ? `<button onclick="goToEdit('${post.id}')" class="btn" style="padding: 4px 10px; font-size: 0.8rem; background: rgba(245, 158, 11, 0.2); color: var(--accent-gold); border: 1px solid var(--accent-gold);">✏️ Muuda postitust</button>` : ''}
+                        </div>
+                        <h1 class="post-full-title">${post.title}</h1>
+                    </div>
+                    
+                    <div class="post-body">
+                        ${post.content}
+                    </div>
+                </article>
+            `;
+        }
+
+        function goToEdit(id) {
+            window.location.href = `blog.html?edit=${id}`;
+        }
+    </script>
+</body>
+</html>
