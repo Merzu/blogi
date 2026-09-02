@@ -34,6 +34,18 @@
             margin-bottom: 30px;
         }
 
+        .guest-notice {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid #3b82f6;
+            color: #93c5fd;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
         .form-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -136,6 +148,14 @@
 
     <main class="container" style="padding-top: 30px;">
         
+        <!-- TEATIS KÜLALISELE -->
+        <div id="guest-notice-banner" class="guest-notice" style="display: none;">
+            <span>👁️</span>
+            <div>
+                <strong>Vaatamisrežiim (Külaline):</strong> Sulle on kuvatud tehingute ajalugu ja statistika. Tehingute lisamine ja kustutamine on lubatud vaid Admin kasutajale.
+            </div>
+        </div>
+
         <div class="dashboard-grid">
             <div class="metric-card highlight">
                 <span>Portfelli Koguväärtus</span>
@@ -151,7 +171,8 @@
             </div>
         </div>
 
-        <div class="form-section">
+        <!-- TEHINGU LISAMISE VORM (AINULT ADMINILE) -->
+        <div id="admin-form-section" class="form-section">
             <h3 style="margin-bottom: 5px; color: var(--accent-gold);">+ Lisa Uus Tehing / Ost</h3>
             <p style="color: var(--text-muted); font-size: 0.9rem;">Sisesta uue tehingu andmed (nt: S&P 500, 2000 €):</p>
             
@@ -177,7 +198,7 @@
                         <input type="number" id="tx-amount" step="0.01" placeholder="2000" required>
                     </div>
                     <div class="form-group" style="display: flex; align-items: flex-end;">
-                        <button type="submit" class="btn" style="width: 100%; height: 43px;">Salvesta Tehing</button>
+                        <button type="submit" class="btn" style="width: 100%; height: 43px;">Salvesta Tehing 💾</button>
                     </div>
                 </div>
             </form>
@@ -194,17 +215,11 @@
             </div>
         </div>
 
-        <h3 style="margin-bottom: 15px;">📊 Tehingute Logi (Exceli Tabel)</h3>
+        <h3 style="margin-bottom: 15px;">📊 Tehingute Logi</h3>
         <div class="excel-table-container">
             <table class="excel-table">
-                <thead>
-                    <tr>
-                        <th>Kuupäev</th>
-                        <th>Instrument</th>
-                        <th>Tüüp</th>
-                        <th>Summa (€)</th>
-                        <th>Tegevus</th>
-                    </tr>
+                <thead id="table-head">
+                    <!-- DÜNAAMILINE PÄIS -->
                 </thead>
                 <tbody id="table-body">
                 </tbody>
@@ -214,6 +229,15 @@
     </main>
 
     <script>
+        const currentUser = JSON.parse(localStorage.getItem('rahamagi_user'));
+        const isAdmin = currentUser?.role === 'admin';
+
+        // Kontrolli õiguseid ja kohanda kasutajaliidest
+        if (!isAdmin) {
+            document.getElementById('admin-form-section').style.display = 'none';
+            document.getElementById('guest-notice-banner').style.display = 'flex';
+        }
+
         document.getElementById('tx-date').valueAsDate = new Date();
 
         let transactions = JSON.parse(localStorage.getItem('rahamagi_portfolio')) || [
@@ -234,6 +258,11 @@
 
         document.getElementById('transaction-form').addEventListener('submit', function(e) {
             e.preventDefault();
+            if (!isAdmin) {
+                alert('Viga: Ainult Admin saab tehinguid lisada!');
+                return;
+            }
+
             const date = document.getElementById('tx-date').value;
             const asset = document.getElementById('tx-asset').value.trim();
             const type = document.getElementById('tx-type').value;
@@ -248,12 +277,30 @@
         });
 
         function deleteTx(id) {
-            transactions = transactions.filter(t => t.id !== id);
-            saveAndRender();
+            if (!isAdmin) {
+                alert('Viga: Ainult Admin saab tehinguid kustutada!');
+                return;
+            }
+            if (confirm('Kas oled kindel, et soovid selle tehingu kustutada?')) {
+                transactions = transactions.filter(t => t.id !== id);
+                saveAndRender();
+            }
         }
 
         function renderTable() {
+            const thead = document.getElementById('table-head');
             const tbody = document.getElementById('table-body');
+            
+            thead.innerHTML = `
+                <tr>
+                    <th>Kuupäev</th>
+                    <th>Instrument</th>
+                    <th>Tüüp</th>
+                    <th>Summa (€)</th>
+                    ${isAdmin ? '<th style="text-align: right;">Tegevus</th>' : ''}
+                </tr>
+            `;
+
             tbody.innerHTML = '';
             const sorted = [...transactions].sort((a,b) => new Date(b.date) - new Date(a.date));
 
@@ -266,7 +313,7 @@
                     <td style="font-weight: bold; color: ${t.type === 'OST' ? '#10b981' : '#ef4444'}">
                         ${t.type === 'OST' ? '+' : '-'}${t.amount.toLocaleString('et-EE', {minimumFractionDigits: 2})} €
                     </td>
-                    <td><button class="btn-delete" onclick="deleteTx(${t.id})">Kustuta</button></td>
+                    ${isAdmin ? `<td style="text-align: right;"><button class="btn-delete" onclick="deleteTx(${t.id})">Kustuta</button></td>` : ''}
                 `;
                 tbody.appendChild(tr);
             });
@@ -314,7 +361,7 @@
                 options: { plugins: { legend: { labels: { color: '#f8fafc' } } } }
             });
 
-            const sortedByDate = [...transactions].sort((a,b) => new Date(a.date) - new Date(b.date));
+            const sortedByDate = [...transactions].sort((a,b) => new Date(a.date) - new Date(a.date));
             const dates = [];
             const cumulativeValues = [];
             let currentTotal = 0;
