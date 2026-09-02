@@ -48,7 +48,7 @@
 
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
             gap: 15px;
             margin-top: 15px;
         }
@@ -66,13 +66,9 @@
 
         .charts-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
-        }
-
-        @media (max-width: 900px) {
-            .charts-grid { grid-template-columns: 1fr; }
         }
 
         .chart-card {
@@ -122,6 +118,15 @@
         .type-buy { background: rgba(16, 185, 129, 0.2); color: #34d399; }
         .type-sell { background: rgba(239, 68, 68, 0.2); color: #f87171; }
 
+        .category-tag {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--accent-gold);
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
         .btn-delete {
             background: transparent;
             border: 1px solid #ef4444;
@@ -140,19 +145,17 @@
             <a href="index.html" class="logo-link">
                 <img src="rahamagi_logo_official.png" alt="Rahamägi Logo" class="site-logo">
             </a>
-            <nav>
-                <ul id="main-nav-links"></ul>
-            </nav>
+            <nav><ul id="main-nav-links"></ul></nav>
         </div>
     </header>
 
     <main class="container" style="padding-top: 30px;">
         
-        <!-- TEATIS KÜLALISELE -->
+        <!-- TEATIS KÜLALISTELE -->
         <div id="guest-notice-banner" class="guest-notice" style="display: none;">
             <span>👁️</span>
             <div>
-                <strong>Vaatamisrežiim (Külaline):</strong> Sulle on kuvatud tehingute ajalugu ja statistika. Tehingute lisamine ja kustutamine on lubatud vaid Admin kasutajale.
+                <strong>Vaatamisrežiim:</strong> Sulle on kuvatud tehingute ajalugu, kategooriad ja statistika. Tehingute lisamine ning kustutamine on lubatud vaid Admin kasutajale.
             </div>
         </div>
 
@@ -173,8 +176,8 @@
 
         <!-- TEHINGU LISAMISE VORM (AINULT ADMINILE) -->
         <div id="admin-form-section" class="form-section">
-            <h3 style="margin-bottom: 5px; color: var(--accent-gold);">+ Lisa Uus Tehing / Ost</h3>
-            <p style="color: var(--text-muted); font-size: 0.9rem;">Sisesta uue tehingu andmed (nt: S&P 500, 2000 €):</p>
+            <h3 style="margin-bottom: 5px; color: var(--accent-gold);">+ Lisa Uus Tehing</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Sisesta tehingu andmed ja vali kategooria:</p>
             
             <form id="transaction-form">
                 <div class="form-grid">
@@ -183,8 +186,21 @@
                         <input type="date" id="tx-date" required>
                     </div>
                     <div class="form-group">
-                        <label>Instrument / Fond</label>
-                        <input type="text" id="tx-asset" placeholder="nt S&P 500 Index" required>
+                        <label>Instrument / Nimetus</label>
+                        <input type="text" id="tx-asset" placeholder="nt S&P 500 või Üürikorter" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Kategooria</label>
+                        <select id="tx-category" required>
+                            <option value="ETF-id">ETF-id</option>
+                            <option value="Aktsiad">Aktsiad</option>
+                            <option value="Kinnisvara">Kinnisvara</option>
+                            <option value="Fondid">Fondid</option>
+                            <option value="Võlakirjad">Võlakirjad</option>
+                            <option value="Krüpto">Krüpto</option>
+                            <option value="Raha / Hoius">Raha / Hoius</option>
+                            <option value="Muu">Muu</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label>Tehingu Tüüp</label>
@@ -204,18 +220,23 @@
             </form>
         </div>
 
+        <!-- DIAGRAMMID -->
         <div class="charts-grid">
             <div class="chart-card">
-                <h4 style="margin-bottom: 15px; color: var(--text-muted);">Varade Jaotus (Sektordiagramm)</h4>
-                <canvas id="allocationChart"></canvas>
+                <h4 style="margin-bottom: 15px; color: var(--text-muted);">🏢 Kategooriate Jaotus (%)</h4>
+                <canvas id="categoryChart"></canvas>
             </div>
             <div class="chart-card">
-                <h4 style="margin-bottom: 15px; color: var(--text-muted);">Portfelli Kasv Läbi Aja</h4>
-                <canvas id="growthChart"></canvas>
+                <h4 style="margin-bottom: 15px; color: var(--text-muted);">📊 Varade Jooksev Väärtus (€)</h4>
+                <canvas id="assetChart"></canvas>
+            </div>
+            <div class="chart-card" style="grid-column: 1 / -1;">
+                <h4 style="margin-bottom: 15px; color: var(--text-muted);">📈 Portfelli Kasv Läbi Aja</h4>
+                <canvas id="growthChart" style="max-height: 280px;"></canvas>
             </div>
         </div>
 
-        <h3 style="margin-bottom: 15px;">📊 Tehingute Logi</h3>
+        <h3 style="margin-bottom: 15px;">📊 Tehingute Ajalugu</h3>
         <div class="excel-table-container">
             <table class="excel-table">
                 <thead id="table-head">
@@ -232,7 +253,6 @@
         const currentUser = JSON.parse(localStorage.getItem('rahamagi_user'));
         const isAdmin = currentUser?.role === 'admin';
 
-        // Kontrolli õiguseid ja kohanda kasutajaliidest
         if (!isAdmin) {
             document.getElementById('admin-form-section').style.display = 'none';
             document.getElementById('guest-notice-banner').style.display = 'flex';
@@ -240,13 +260,17 @@
 
         document.getElementById('tx-date').valueAsDate = new Date();
 
+        // Algandmed koos kategooriatega
         let transactions = JSON.parse(localStorage.getItem('rahamagi_portfolio')) || [
-            { id: 1, date: '2026-08-15', asset: 'S&P 500 Index', type: 'OST', amount: 50.00 },
-            { id: 2, date: '2026-08-31', asset: 'S&P 500 Index', type: 'OST', amount: 2000.00 },
-            { id: 3, date: '2026-09-01', asset: 'VWCE Maailma Fond', type: 'OST', amount: 500.00 }
+            { id: 1, date: '2026-08-15', asset: 'S&P 500 ETF', category: 'ETF-id', type: 'OST', amount: 50.00 },
+            { id: 2, date: '2026-08-31', asset: 'S&P 500 ETF', category: 'ETF-id', type: 'OST', amount: 2000.00 },
+            { id: 3, date: '2026-09-01', asset: 'VWCE Fond', category: 'Fondid', type: 'OST', amount: 500.00 },
+            { id: 4, date: '2026-09-02', asset: 'LHV Aktsia', category: 'Aktsiad', type: 'OST', amount: 1200.00 },
+            { id: 5, date: '2026-09-02', asset: 'Tallinna Korter', category: 'Kinnisvara', type: 'OST', amount: 5000.00 }
         ];
 
-        let allocationChartInstance = null;
+        let categoryChartInstance = null;
+        let assetChartInstance = null;
         let growthChartInstance = null;
 
         function saveAndRender() {
@@ -258,17 +282,15 @@
 
         document.getElementById('transaction-form').addEventListener('submit', function(e) {
             e.preventDefault();
-            if (!isAdmin) {
-                alert('Viga: Ainult Admin saab tehinguid lisada!');
-                return;
-            }
+            if (!isAdmin) return;
 
             const date = document.getElementById('tx-date').value;
             const asset = document.getElementById('tx-asset').value.trim();
+            const category = document.getElementById('tx-category').value;
             const type = document.getElementById('tx-type').value;
             const amount = parseFloat(document.getElementById('tx-amount').value);
 
-            transactions.push({ id: Date.now(), date, asset, type, amount });
+            transactions.push({ id: Date.now(), date, asset, category, type, amount });
 
             document.getElementById('tx-asset').value = '';
             document.getElementById('tx-amount').value = '';
@@ -277,10 +299,7 @@
         });
 
         function deleteTx(id) {
-            if (!isAdmin) {
-                alert('Viga: Ainult Admin saab tehinguid kustutada!');
-                return;
-            }
+            if (!isAdmin) return;
             if (confirm('Kas oled kindel, et soovid selle tehingu kustutada?')) {
                 transactions = transactions.filter(t => t.id !== id);
                 saveAndRender();
@@ -295,6 +314,7 @@
                 <tr>
                     <th>Kuupäev</th>
                     <th>Instrument</th>
+                    <th>Kategooria</th>
                     <th>Tüüp</th>
                     <th>Summa (€)</th>
                     ${isAdmin ? '<th style="text-align: right;">Tegevus</th>' : ''}
@@ -309,6 +329,7 @@
                 tr.innerHTML = `
                     <td>${t.date}</td>
                     <td><strong>${t.asset}</strong></td>
+                    <td><span class="category-tag">${t.category || 'Muu'}</span></td>
                     <td><span class="type-tag ${t.type === 'OST' ? 'type-buy' : 'type-sell'}">${t.type}</span></td>
                     <td style="font-weight: bold; color: ${t.type === 'OST' ? '#10b981' : '#ef4444'}">
                         ${t.type === 'OST' ? '+' : '-'}${t.amount.toLocaleString('et-EE', {minimumFractionDigits: 2})} €
@@ -324,44 +345,109 @@
             const assetsSet = new Set();
 
             transactions.forEach(t => {
-                if(t.type === 'OST') total += t.amount;
+                if (t.type === 'OST') total += t.amount;
                 else total -= t.amount;
                 assetsSet.add(t.asset);
             });
 
-            document.getElementById('total-value').innerText = total.toLocaleString('et-EE', {minimumFractionDigits: 2}) + ' €';
-            document.getElementById('total-invested').innerText = total.toLocaleString('et-EE', {minimumFractionDigits: 2}) + ' €';
+            const formattedTotal = total.toLocaleString('et-EE', {minimumFractionDigits: 2}) + ' €';
+            document.getElementById('total-value').innerText = formattedTotal;
+            document.getElementById('total-invested').innerText = formattedTotal;
             document.getElementById('total-assets').innerText = assetsSet.size;
         }
 
         function renderCharts() {
-            const assetTotals = {};
+            // Arvuta igale varale ja kategooriale netojääk (Ostud minus Müügid)
+            const assetBalances = {};
+            const categoryBalances = {};
+
             transactions.forEach(t => {
-                if(!assetTotals[t.asset]) assetTotals[t.asset] = 0;
-                assetTotals[t.asset] += (t.type === 'OST' ? t.amount : -t.amount);
+                const amt = t.type === 'OST' ? t.amount : -t.amount;
+                const cat = t.category || 'Muu';
+
+                assetBalances[t.asset] = (assetBalances[t.asset] || 0) + amt;
+                categoryBalances[cat] = (categoryBalances[cat] || 0) + amt;
             });
 
-            const assetLabels = Object.keys(assetTotals);
-            const assetData = Object.values(assetTotals);
+            // Arvuta portfelli tegelik kogujääk
+            let totalNetValue = 0;
+            Object.values(assetBalances).forEach(v => {
+                if (v > 0) totalNetValue += v;
+            });
 
-            const ctx1 = document.getElementById('allocationChart').getContext('2d');
-            if(allocationChartInstance) allocationChartInstance.destroy();
-            
-            allocationChartInstance = new Chart(ctx1, {
+            // 1. KATEGOORIATE DIAGRAMM PROTSENTIDEGA (%)
+            const activeCategories = Object.keys(categoryBalances).filter(c => categoryBalances[c] > 0);
+            const categoryData = activeCategories.map(c => categoryBalances[c]);
+            const categoryLabelsWithPct = activeCategories.map(c => {
+                const val = categoryBalances[c];
+                const pct = totalNetValue > 0 ? ((val / totalNetValue) * 100).toFixed(1) : 0;
+                return `${c} (${pct}%)`;
+            });
+
+            const ctx1 = document.getElementById('categoryChart').getContext('2d');
+            if (categoryChartInstance) categoryChartInstance.destroy();
+
+            categoryChartInstance = new Chart(ctx1, {
                 type: 'doughnut',
                 data: {
-                    labels: assetLabels,
+                    labels: categoryLabelsWithPct,
                     datasets: [{
-                        data: assetData,
-                        backgroundColor: ['#10b981', '#f59e0b', '#3b82f6', '#ec4899', '#8b5cf6'],
+                        data: categoryData,
+                        backgroundColor: ['#f59e0b', '#10b981', '#3b82f6', '#ec4899', '#8b5cf6', '#06b6d4', '#64748b'],
                         borderWidth: 2,
                         borderColor: '#1e293b'
                     }]
                 },
-                options: { plugins: { legend: { labels: { color: '#f8fafc' } } } }
+                options: {
+                    plugins: {
+                        legend: { labels: { color: '#f8fafc', font: { size: 12 } } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const val = context.raw || 0;
+                                    const pct = totalNetValue > 0 ? ((val / totalNetValue) * 100).toFixed(1) : 0;
+                                    return ` ${val.toLocaleString('et-EE')} € (${pct}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
             });
 
-            const sortedByDate = [...transactions].sort((a,b) => new Date(a.date) - new Date(a.date));
+            // 2. VARADE JOOKSEV VÄÄRTUS (€) (Ei kajasta müüke eraldi, vaid vähendab raha hulka)
+            const activeAssets = Object.keys(assetBalances).filter(a => assetBalances[a] > 0);
+            const assetData = activeAssets.map(a => assetBalances[a]);
+
+            const ctx2 = document.getElementById('assetChart').getContext('2d');
+            if (assetChartInstance) assetChartInstance.destroy();
+
+            assetChartInstance = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: activeAssets,
+                    datasets: [{
+                        data: assetData,
+                        backgroundColor: ['#10b981', '#f59e0b', '#3b82f6', '#8b5cf6', '#ec4899', '#06b6d4'],
+                        borderWidth: 2,
+                        borderColor: '#1e293b'
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: { labels: { color: '#f8fafc', font: { size: 12 } } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${context.raw.toLocaleString('et-EE')} €`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 3. PORTFELLI KASV LÄBI AJA
+            const sortedByDate = [...transactions].sort((a,b) => new Date(a.date) - new Date(b.date));
             const dates = [];
             const cumulativeValues = [];
             let currentTotal = 0;
@@ -372,23 +458,25 @@
                 cumulativeValues.push(currentTotal);
             });
 
-            const ctx2 = document.getElementById('growthChart').getContext('2d');
-            if(growthChartInstance) growthChartInstance.destroy();
+            const ctx3 = document.getElementById('growthChart').getContext('2d');
+            if (growthChartInstance) growthChartInstance.destroy();
 
-            growthChartInstance = new Chart(ctx2, {
+            growthChartInstance = new Chart(ctx3, {
                 type: 'line',
                 data: {
                     labels: dates,
                     datasets: [{
                         label: 'Portfelli Väärtus (€)',
                         data: cumulativeValues,
-                        borderColor: '#f59e0b',
-                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
                         fill: true,
                         tension: 0.3
                     }]
                 },
                 options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
                     scales: {
                         x: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
                         y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }
